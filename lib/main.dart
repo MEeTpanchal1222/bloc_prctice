@@ -1,4 +1,5 @@
 import 'package:bloc_prctice/cubit_counter.dart';
+import 'package:bloc_prctice/cubit_score.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => countercubit()),
         BlocProvider(create: (context) => Conterbloc()),
+        BlocProvider(create: (context)=> Ratingcubit()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -87,6 +89,80 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               }
             ),
+
+            // BlocBuilder<Ratingcubit, RatingState>(
+            //   //bloc: _bloc,
+            //     buildWhen: (previous,current)=> previous.blocscore != current.blocscore,
+            //     builder: (context, State) {
+            //       return
+            //         Text(
+            //           '${State.blocscore}',
+            //           style: Theme
+            //               .of(context)
+            //               .textTheme
+            //               .headlineMedium,
+            //         );
+            //     }
+            // ),
+            // BlocBuilder<Ratingcubit, RatingState>(
+            //   //bloc: _bloc,
+            //   buildWhen: (previous,current)=> previous.cubitscore != current.cubitscore,
+            //     builder: (context, State) {
+            //       return
+            //         Text(
+            //           '${State.cubitscore}',
+            //           style: Theme
+            //               .of(context)
+            //               .textTheme
+            //               .headlineMedium,
+            //         );
+            //     }
+            // ),
+            BlocSelector<Ratingcubit,RatingState,int>(selector: (state) => state.blocscore, builder: (context, State) {
+          return
+            Text(
+              '${State}',
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .headlineMedium,
+            );
+        }),
+            BlocSelector<Ratingcubit,RatingState,int>(selector: (state) => state.cubitscore, builder: (context, State) {
+              return
+                Text(
+                  '${State}',
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .headlineMedium,
+                );
+            }),
+            // BlocListener<Ratingcubit,RatingState>(listener: (context,state){
+            //   if(state.blocscore == 5) {
+            //    const snackbar = SnackBar(content: Text('bloc wins'));
+            //    ScaffoldMessenger.of(context).showSnackBar(snackbar);
+            //   }
+            // },
+            //   child: Text('Bloc vs Cubit'),
+            //   listenWhen: (previous, current) => current.blocscore == 5,
+            //
+            // )
+            BlocConsumer<Ratingcubit,RatingState>(
+              listenWhen: (previous, current) => current.blocscore == 5 ||current.cubitscore == 5  ,
+              listener: (context,state){
+              // if(state.blocscore == 5) {
+              //   const snackbar = SnackBar(content: Text('bloc wins'));
+              //   ScaffoldMessenger.of(context).showSnackBar(snackbar);
+              // }
+              final snackbar = SnackBar(content: Text(state.blocscore == 5?'bloc wins':'cubit wins'));
+              ScaffoldMessenger.of(context).showSnackBar(snackbar);
+            },
+              builder: (context,state){
+                return Text('Bloc vs Cubit');}
+
+
+            ),
           ],
         ),
       ),
@@ -95,8 +171,12 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           FloatingActionButton(
             onPressed: () {
-              final bloc  = context.read<Conterbloc>();
-              bloc.add(CounterIncrement());
+              // final bloc  = context.read<Conterbloc>();
+              // bloc.add(CounterIncrement());
+
+              context.read<Ratingcubit>().upvoteBloc();
+
+
              // _bloc.add(CounterIncrement());
             },
             tooltip: 'Increment',
@@ -105,8 +185,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
           FloatingActionButton(
             onPressed: () {
-              final bloc  = context.read<Conterbloc>();
-              bloc.add(CounterDecrement());
+              // final bloc  = context.read<Conterbloc>();
+              // bloc.add(CounterDecrement());
+
+
+          context.read<Ratingcubit>().upvoteCubit();
+
+
+
+
               //_bloc.add(CounterDecrement());
             },
             tooltip: 'Decrement',
