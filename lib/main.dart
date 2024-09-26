@@ -1,5 +1,7 @@
 import 'package:bloc_prctice/cubit_counter.dart';
 import 'package:bloc_prctice/cubit_score.dart';
+import 'package:bloc_prctice/list_handling_in_bloc/Bloc/developer_bloc.dart';
+import 'package:bloc_prctice/list_handling_in_bloc/list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,6 +24,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => countercubit()),
         BlocProvider(create: (context) => Conterbloc()),
         BlocProvider(create: (context)=> Ratingcubit()),
+        BlocProvider(create: (context) => DeveloperBloc())
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -30,7 +33,8 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: const MyHomePage(title: 'Flutter Demo Home Page'),
+        home:list_screen()
+        //const MyHomePage(title: 'Flutter Demo Home Page'),
       ),
     );
   }
